@@ -1,36 +1,93 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# WhatsApp Bot на Next.js
 
-## Getting Started
+WhatsApp бот, готовый к деплою на Vercel.
 
-First, run the development server:
+## 🚀 Быстрый старт
 
+### Локальная разработка
+
+1. Установите зависимости:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Создайте файл `.env.local` с переменными окружения:
+```env
+WHATSAPP_VERIFY_TOKEN=your_verify_token_here
+WHATSAPP_WEBHOOK_SECRET=your_webhook_secret_here
+WHATSAPP_PHONE_NUMBER_ID=your_phone_number_id_here
+WHATSAPP_ACCESS_TOKEN=your_access_token_here
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Запустите dev сервер:
+```bash
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Откройте [http://localhost:3000](http://localhost:3000) в браузере.
 
-## Learn More
+## 📱 Настройка WhatsApp Business API
 
-To learn more about Next.js, take a look at the following resources:
+1. Создайте приложение на [Meta for Developers](https://developers.facebook.com/)
+2. Добавьте продукт "WhatsApp"
+3. Получите необходимые credentials:
+   - **Phone Number ID**: из настроек WhatsApp
+   - **Access Token**: временный или постоянный токен
+   - **Verify Token**: любой строковый токен для верификации webhook
+   - **Webhook Secret**: из настроек приложения
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🔗 Настройка Webhook
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+После деплоя на Vercel:
 
-## Deploy on Vercel
+1. Получите URL вашего webhook: `https://your-domain.vercel.app/api/webhook`
+2. В настройках WhatsApp приложения добавьте webhook:
+   - **Callback URL**: `https://your-domain.vercel.app/api/webhook`
+   - **Verify Token**: тот же токен, что в `WHATSAPP_VERIFY_TOKEN`
+   - **Subscription Fields**: выберите `messages`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🚢 Деплой на Vercel
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Через Vercel CLI:
+
+```bash
+npm i -g vercel
+vercel
+```
+
+### Через GitHub:
+
+1. Загрузите код в GitHub репозиторий
+2. Перейдите на [Vercel](https://vercel.com/new)
+3. Импортируйте ваш репозиторий
+4. Добавьте переменные окружения в настройках проекта:
+   - `WHATSAPP_VERIFY_TOKEN`
+   - `WHATSAPP_WEBHOOK_SECRET`
+   - `WHATSAPP_PHONE_NUMBER_ID`
+   - `WHATSAPP_ACCESS_TOKEN`
+5. Нажмите Deploy
+
+### Настройка переменных окружения в Vercel:
+
+1. Откройте проект в Vercel Dashboard
+2. Перейдите в Settings → Environment Variables
+3. Добавьте все необходимые переменные из `.env.local`
+4. Передеплойте проект
+
+## 📝 API Endpoints
+
+### `GET /api/webhook`
+Верификация webhook от WhatsApp (используется Meta при настройке webhook)
+
+### `POST /api/webhook`
+Принимает входящие сообщения от WhatsApp и отправляет ответы
+
+## 🛠️ Кастомизация
+
+Отредактируйте функцию `handleMessage` в `app/api/webhook/route.ts` для изменения логики бота.
+
+## 📚 Ресурсы
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [WhatsApp Business API Documentation](https://developers.facebook.com/docs/whatsapp)
+- [Vercel Deployment Guide](https://vercel.com/docs)
